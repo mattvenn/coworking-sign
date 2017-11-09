@@ -1,1 +1,2 @@
 alphasign
+forex-python # for bitcoin
