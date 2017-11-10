@@ -2,7 +2,7 @@ import time
 import alphasign
 import subprocess
 import logging
-from messages import StaticMessage, TimeMessage, BitCoinMessage, AmazingMessage
+from messages import StaticMessage, TimeMessage, BitcoinMessage, CurrencyMessage, AmazingMessage, KickstarterMessage
 
 # get logging started
 log_format = logging.Formatter('%(asctime)s - %(name)-12s - %(levelname)-8s - %(message)s')
@@ -23,8 +23,8 @@ fh.setLevel(logging.INFO)
 fh.setFormatter(log_format)
 log.addHandler(fh)
 
-#pi = False
 pi = True
+#pi = False
 
 if __name__ == "__main__":
 
@@ -36,28 +36,28 @@ if __name__ == "__main__":
         sign.clear_memory()
 
 
-    messages = { 
-        'A' : StaticMessage("pull requests to http://bit.ly/cowork-sign"),
-        'B' : TimeMessage(),
-        'C' : BitCoinMessage(),
-        'D' : AmazingMessage(),
-        }
+    messages = [
+        StaticMessage('A', "pull requests to http://bit.ly/cowork-sign"),
+        TimeMessage('B'),
+        CurrencyMessage('C', 'GBP'),
+        BitcoinMessage('D'),
+        AmazingMessage('E'),
+        KickstarterMessage('F', 'Reflex', 'https://www.kickstarter.com/projects/reflexcamera/reflex-bringing-back-the-analogue-slr-camera'),
+        ]
 
     # initial message
-    for label in messages.keys():
-        text = messages[label].get_text()
-        logging.info('%s : %s' % (label, text))
+    for m in messages:
+        logging.info(m.get_plain_text())
         if pi:
-            sign.write(alphasign.Text(text, label=label, mode=alphasign.modes.AUTOMODE))
+            sign.write(m.get_text())
 
 
     # poll and update
     while True:
         time.sleep(1)
         logging.info("sleeping")
-        for label in messages.keys():
-            if messages[label].update():
-                text = messages[label].get_text()
-                logging.info('%s : %s' % (label, text))
+        for m in messages:
+            if m.update():
+                logging.info(m.get_plain_text())
                 if pi:
-                    sign.write(alphasign.Text(text, label=label, mode=alphasign.modes.AUTOMODE))
+                    sign.write(m.get_text())
