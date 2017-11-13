@@ -1,4 +1,4 @@
-from messages import Message
+from messages import Message, is_pi
 import alphasign
 import logging
 
@@ -7,13 +7,19 @@ import requests
 
 class KickstarterMessage(Message):
 
-    def __init__(self, label, name, url):
+    def __init__(self, label, name, url, fake=False):
         self.url = url
+        self.fake = fake
         self.name = name
+        self.top = "name      day bkrs total   % " # top line is actually only 29 chars - off by one bug in the sign's firmware?
         super(KickstarterMessage, self).__init__(label)
-        self.update_period = 10 * 60 # 10 minutes
+        self.update_period = 60 * 60 # 60 minutes in seconds
 
     def do_update(self):
+        if self.fake:
+            self.bot = "%-9s %-3d %-4d %-7d %-3d" % (self.name[0:9], 5, 1581, 1000000, 199)
+            return
+
         # fetch page
         logging.info("fetching kickstarter information for %s" % self.name)
         result = requests.get(self.url)
@@ -22,20 +28,17 @@ class KickstarterMessage(Message):
             return
 
         # parse
-        logging.info("parsing")
+        logging.info("parsing - takes a long time on the Pi!")
         strainer = SoupStrainer('div', attrs={'class': "NS_campaigns__stats"})
         soup = BeautifulSoup(result.content, 'lxml', parse_only=strainer)
         pledged = soup.find("div", {"id": "pledged"})
         backers = soup.find("div", {"id": "backers_count"})
         duration = soup.find("span", {"id": "project_duration_data"})
-        logging.info(pledged)
-        logging.info(backers)
-        logging.info(duration)
 
         # assemble text
                     ##############################  30 chars wide
         self.top = "name    days #    total    %  "
-        self.bot = "%-7s %-4d %-4d %-8d %-3d" % (self.name, int(duration.attrs['data-hours-remaining'])/24,
+        self.bot = "%-9s %-4d %-4d %-7d %-3d" % (self.name[0:9], int(duration.attrs['data-hours-remaining'])/24,
             int(backers.attrs['data-backers-count']),
             float(pledged.attrs['data-pledged']),
             float(pledged.attrs['data-percent-raised'])*100)
@@ -46,13 +49,19 @@ class KickstarterMessage(Message):
 
     # override get_text so we can show stuff on the top and bottom lines at once
     def get_text(self):
-        return alphasign.Text(self.top + self.bot, mode=alphasign.modes.AUTOMODE, position=alphasign.positions.FILL, label=self.label)
+        return alphasign.Text(alphasign.charsets.FIXED_WIDTH_ON + self.top + self.bot, mode=alphasign.modes.AUTOMODE, position=alphasign.positions.FILL, label=self.label)
 
 if __name__ == "__main__":
 
     logging.basicConfig(level=logging.INFO)
    
-    project_name = 'Reflex'
-    project_url = 'https://www.kickstarter.com/projects/reflexcamera/reflex-bringing-back-the-analogue-slr-camera'
-    ks = KickstarterMessage('A', project_name, project_url)
+    project_name = 'IOToilets'
+    project_url = 'http://iotoilets.com'
+    ks = KickstarterMessage('A', project_name, project_url, fake=True) # fake to avoid the overhead of actually parsing
     logging.info(ks.get_plain_text())
+
+    if is_pi():
+        sign = alphasign.interfaces.local.Serial(device='/dev/ttyUSB0', baudrate=38400)
+        sign.connect()
+        sign.clear_memory()
+        sign.write(ks.get_text())
