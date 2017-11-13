@@ -17,7 +17,7 @@ class KickstarterMessage(Message):
 
     def do_update(self):
         if self.fake:
-            self.bot = "%-9s %-3d %-4d %-7d %-3d" % (self.name[0:9], 5, 1581, 1000000, 199)
+            self.bot = "%-9s %-3d %-4d %-7d %-3d" % (self.name[0:9], 23, 409, 126186, 126)
             return
 
         # fetch page
@@ -37,8 +37,7 @@ class KickstarterMessage(Message):
 
         # assemble text
                     ##############################  30 chars wide
-        self.top = "name    days #    total    %  "
-        self.bot = "%-9s %-4d %-4d %-7d %-3d" % (self.name[0:9], int(duration.attrs['data-hours-remaining'])/24,
+        self.bot = "%-9s %-3d %-4d %-7d %-3d" % (self.name[0:9], int(duration.attrs['data-hours-remaining'])/24,
             int(backers.attrs['data-backers-count']),
             float(pledged.attrs['data-pledged']),
             float(pledged.attrs['data-percent-raised'])*100)
