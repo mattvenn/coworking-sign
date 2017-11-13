@@ -2,7 +2,7 @@ import time
 import alphasign
 import subprocess
 import logging
-from messages import StaticMessage, TimeMessage, BitcoinMessage, CurrencyMessage, AmazingMessage, KickstarterMessage
+from messages import StaticMessage, TimeMessage, BitcoinMessage, CurrencyMessage, AmazingMessage, KickstarterMessage, is_pi
 
 # get logging started
 log_format = logging.Formatter('%(asctime)s - %(name)-12s - %(levelname)-8s - %(message)s')
@@ -23,21 +23,18 @@ fh.setLevel(logging.INFO)
 fh.setFormatter(log_format)
 log.addHandler(fh)
 
-pi = True
-#pi = False
-
 if __name__ == "__main__":
 
     logging.info("starting sign writer")
 
-    if pi:
+    if is_pi():
         sign = alphasign.interfaces.local.Serial(device='/dev/ttyUSB0', baudrate=38400)
         sign.connect()
         sign.clear_memory()
 
 
     messages = [
-        StaticMessage('A', "pull requests to http://bit.ly/cowork-sign"),
+        StaticMessage('A', "http://bit.ly/cowork-sign"),
         TimeMessage('B'),
         CurrencyMessage('C', 'GBP'),
         BitcoinMessage('D'),
@@ -48,7 +45,7 @@ if __name__ == "__main__":
     # initial message
     for m in messages:
         logging.info(m.get_plain_text())
-        if pi:
+        if is_pi():
             sign.write(m.get_text())
 
 
@@ -59,5 +56,5 @@ if __name__ == "__main__":
         for m in messages:
             if m.update():
                 logging.info(m.get_plain_text())
-                if pi:
+                if is_pi():
                     sign.write(m.get_text())
