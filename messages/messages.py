@@ -5,11 +5,19 @@ from abc import ABCMeta, abstractmethod
 
 log = logging.getLogger(__name__)
 
+def is_pi():
+    import socket
+    hostname = socket.gethostname()
+    logging.info(hostname)
+    if hostname == "raspberrypi":
+        return True
+    return False
+
 class Message(object):
     def __init__(self, label):
         self.last_updated = 0
         self.label = label
-        self.update_period = 120
+        self.update_period = 5 * 60 # 5 minutes in seconds
         self.update()
     
     # is update necessary
