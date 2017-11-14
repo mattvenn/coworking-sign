@@ -40,6 +40,8 @@ if __name__ == "__main__":
         BitcoinMessage('D'),
         AmazingMessage('E'),
         KickstarterMessage('F', 'Reflex', 'https://www.kickstarter.com/projects/reflexcamera/reflex-bringing-back-the-analogue-slr-camera'),
+        TwitterMessage('G', 'dygmalab'),
+        TwitterMessage('H', 'fumblau'),
         ]
 
     # initial message

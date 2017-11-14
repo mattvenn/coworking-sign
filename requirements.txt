@@ -1,2 +1,5 @@
 alphasign
 forex-python # for bitcoin
+tweepy # for twitter
+requests # kickstarter
+bs4 # beautiful soup for kickstarter

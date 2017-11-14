@@ -41,6 +41,16 @@ class Message(object):
     def get_plain_text(self):
         return '[%s] %s' % (self.label, self.text)
 
+class TwoLineMessage(Message):
+
+    def get_plain_text(self):
+        logging.info("[" + self.top + "]")
+        logging.info("[" + self.bot + "]")
+
+    def get_text(self):
+        # fixed width to allow matching things up across the two lines
+        return alphasign.Text(alphasign.charsets.FIXED_WIDTH_ON + self.top + self.bot, mode=alphasign.modes.AUTOMODE, position=alphasign.positions.FILL, label=self.label)
+
 class StaticMessage(Message):
     
     def __init__(self, label, text):

@@ -1,17 +1,17 @@
-from messages import Message, is_pi
+from messages import TwoLineMessage, is_pi
 import alphasign
 import logging
 
 from bs4 import BeautifulSoup, SoupStrainer
 import requests
 
-class KickstarterMessage(Message):
+class KickstarterMessage(TwoLineMessage):
 
     def __init__(self, label, name, url, fake=False):
         self.url = url
         self.fake = fake
         self.name = name
-        self.top = "name      day bkrs total   % " # top line is actually only 29 chars - off by one bug in the sign's firmware?
+        self.top = "name      day bkrs $total  % " # top line is actually only 29 chars - off by one bug in the sign's firmware?
         super(KickstarterMessage, self).__init__(label)
         self.update_period = 60 * 60 # 60 minutes in seconds
 
@@ -42,13 +42,6 @@ class KickstarterMessage(Message):
             float(pledged.attrs['data-pledged']),
             float(pledged.attrs['data-percent-raised'])*100)
     
-    def get_plain_text(self):
-        logging.info("[" + self.top + "]")
-        logging.info("[" + self.bot + "]")
-
-    # override get_text so we can show stuff on the top and bottom lines at once
-    def get_text(self):
-        return alphasign.Text(alphasign.charsets.FIXED_WIDTH_ON + self.top + self.bot, mode=alphasign.modes.AUTOMODE, position=alphasign.positions.FILL, label=self.label)
 
 if __name__ == "__main__":
 
