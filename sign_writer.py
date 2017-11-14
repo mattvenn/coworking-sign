@@ -2,7 +2,7 @@ import time
 import alphasign
 import subprocess
 import logging
-from messages import StaticMessage, TimeMessage, BitcoinMessage, CurrencyMessage, AmazingMessage, KickstarterMessage, is_pi
+from messages import StaticMessage, TimeMessage, BitcoinMessage, CurrencyMessage, AmazingMessage, KickstarterMessage, is_pi, TwitterMessage
 
 # get logging started
 log_format = logging.Formatter('%(asctime)s - %(name)-12s - %(levelname)-8s - %(message)s')
@@ -39,9 +39,9 @@ if __name__ == "__main__":
         CurrencyMessage('C', 'GBP'),
         BitcoinMessage('D'),
         AmazingMessage('E'),
-        KickstarterMessage('F', 'Reflex', 'https://www.kickstarter.com/projects/reflexcamera/reflex-bringing-back-the-analogue-slr-camera'),
         TwitterMessage('G', 'dygmalab'),
         TwitterMessage('H', 'fumblau'),
+        KickstarterMessage('F', 'Reflex', 'https://www.kickstarter.com/projects/reflexcamera/reflex-bringing-back-the-analogue-slr-camera'),
         ]
 
     # initial message

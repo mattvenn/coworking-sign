@@ -19,7 +19,7 @@ class TwitterMessage(TwoLineMessage):
         super(TwitterMessage, self).__init__(label)
 
     def do_update(self):
-        dygma = self.api.get_user('dygmalab')
+        dygma = self.api.get_user(self.name)
         self.bot = "%-12s %-5d %-5d %-5d" % (self.name[0:12], dygma.followers_count, dygma.statuses_count, dygma.favourites_count)
 
 
