@@ -1,6 +1,5 @@
 import time
 import logging
-import alphasign
 from abc import ABCMeta, abstractmethod
 
 log = logging.getLogger(__name__)
@@ -8,10 +7,13 @@ log = logging.getLogger(__name__)
 def is_pi():
     import socket
     hostname = socket.gethostname()
-    logging.info(hostname)
+    #logging.info(hostname) # if this line is commented, log level is forced to warning?!
     if hostname == "raspberrypi":
         return True
     return False
+
+if is_pi():
+    import alphasign
 
 class Message(object):
     def __init__(self, label):
@@ -105,7 +107,6 @@ class BitcoinMessage(Message):
         logging.info("fetching currency update")
         bitcoin = BtcConverter() 
         self.text = "1 Bitcoin = %.2f EUR" % bitcoin.get_latest_price('EUR')
-
 if __name__ == "__main__":
 
     logging.basicConfig(level=logging.INFO)
