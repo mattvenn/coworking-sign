@@ -41,6 +41,10 @@ class Message(object):
     def get_plain_text(self):
         return '[%s] %s' % (self.label, self.text)
 
+    # in case any message needs to do anything at shutdown
+    def finish(self):
+        pass
+
 class TwoLineMessage(Message):
 
     def get_plain_text(self):

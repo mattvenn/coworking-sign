@@ -52,11 +52,17 @@ if __name__ == "__main__":
 
 
     # poll and update
-    while True:
-        time.sleep(1)
-        logging.info("sleeping")
+    try:
+        while True:
+            time.sleep(1)
+            logging.info("sleeping")
+            for m in messages:
+                if m.update():
+                    logging.info(m.get_plain_text())
+                    if is_pi():
+                        sign.write(m.get_text())
+    except KeyboardInterrupt:
+        logging.info("shut down")
         for m in messages:
-            if m.update():
-                logging.info(m.get_plain_text())
-                if is_pi():
-                    sign.write(m.get_text())
+            m.finish()
+        
