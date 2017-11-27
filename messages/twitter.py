@@ -4,13 +4,16 @@ if is_pi():
 import tweepy
 from twitter_secrets import *
 import pickle
+import logging
+
+log = logging.getLogger(__name__)
 
 class TwitterMessage(TwoLineMessage):
 
     def __init__(self, label, name, fake=False):
         self.name = name
         self.fake = fake
-        logging.info("tweepy oauth")
+        log.info("tweepy oauth")
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_secret)
         self.api = tweepy.API(auth)
@@ -22,7 +25,7 @@ class TwitterMessage(TwoLineMessage):
         self.update_period = 60 * 60 # 60 minutes in seconds - as the update takes so long
 
     def do_update(self):
-        logging.info("fetching history... this will take some time")
+        log.info("fetching history... this will take some time")
         favs = 0
         retweets = 0
 
@@ -41,8 +44,7 @@ class TwitterMessage(TwoLineMessage):
 
 if __name__ == "__main__":
 
-    import logging
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     tm = TwitterMessage('A', "dygmalab", fake=False)
     logging.info(tm.get_plain_text())

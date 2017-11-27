@@ -50,8 +50,8 @@ class Message(object):
 class TwoLineMessage(Message):
 
     def get_plain_text(self):
-        logging.info("[" + self.top + "]")
-        logging.info("[" + self.bot + "]")
+        log.info("[" + self.top + "]")
+        log.info("[" + self.bot + "]")
 
     def get_text(self):
         # fixed width to allow matching things up across the two lines
@@ -97,16 +97,18 @@ class CurrencyMessage(Message):
     def do_update(self):
         from forex_python.converter import CurrencyRates
         cr = CurrencyRates()
-        logging.info("fetching currency update %s to %s" % (self.conv_from, self.conv_to))
+        log.info("fetching currency update %s to %s" % (self.conv_from, self.conv_to))
         self.text = "1 %s = %.2f %s" % (self.conv_from, cr.get_rate(self.conv_from, self.conv_to), self.conv_to)
 
 class BitcoinMessage(Message):
 
     def do_update(self):
         from forex_python.bitcoin import BtcConverter
-        logging.info("fetching currency update")
+        log.info("fetching currency update")
         bitcoin = BtcConverter() 
         self.text = "1 Bitcoin = %.2f EUR" % bitcoin.get_latest_price('EUR')
+
+
 if __name__ == "__main__":
 
     logging.basicConfig(level=logging.INFO)
