@@ -12,14 +12,14 @@ def is_pi():
         return True
     return False
 
-if is_pi():
-    import alphasign
+import alphasign
 
 class Message(object):
     def __init__(self, label):
         self.last_updated = 0
         self.label = label
         self.update_period = 5 * 60 # 5 minutes in seconds
+        self.setup()
         self.update()
     
     # is update necessary
@@ -35,6 +35,10 @@ class Message(object):
     def do_update(self):
         pass
 
+    # hook for any setup required before update is called
+    def setup(self):
+        pass
+
     # return text for the sign
     def get_text(self):
         return alphasign.Text(self.text, mode=alphasign.modes.AUTOMODE, label=self.label)
@@ -46,6 +50,15 @@ class Message(object):
     # in case any message needs to do anything at shutdown
     def finish(self):
         pass
+
+    def get_color_compare(self, a, b):
+        if a > b:
+            color = alphasign.colors.GREEN
+        elif a < b:
+            color = alphasign.colors.RED
+        else:
+            color = alphasign.colors.YELLOW
+        return color
 
 class TwoLineMessage(Message):
 
@@ -70,10 +83,9 @@ class StaticMessage(Message):
 
 class AmazingMessage(Message):
 
-    def __init__(self, label):
-        self.people = [ 'Guillem Cabo Engineering', 'Fumblau','SimracingCoach', 'Syrius Prototypes', 'Matt Venn Engineering', 'YOU' ]
+    def setup(self):
+        self.people = [ 'Guillem Cabo Engineering', 'Fumblau','SimracingCoach', 'Sirius Prototypes', 'Matt Venn Engineering', 'YOU' ]
         self.index = 0
-        super(AmazingMessage, self).__init__(label)
 
     def do_update(self):
         self.text = "%s is %sAMAZING!" % (self.people[self.index], alphasign.charsets.WIDE_ON)
@@ -92,21 +104,31 @@ class CurrencyMessage(Message):
     def __init__(self, label, conv_from, conv_to='EUR'):
         self.conv_from = conv_from
         self.conv_to = conv_to
+        self.last_conv = 0
         super(CurrencyMessage, self).__init__(label)
 
     def do_update(self):
         from forex_python.converter import CurrencyRates
         cr = CurrencyRates()
         log.info("fetching currency update %s to %s" % (self.conv_from, self.conv_to))
-        self.text = "1 %s = %.2f %s" % (self.conv_from, cr.get_rate(self.conv_from, self.conv_to), self.conv_to)
+        conv = cr.get_rate(self.conv_from, self.conv_to)
+
+        self.text = "1 %s = %s%.2f %s" % (self.conv_from, self.get_color_compare(conv, self.last_conv), conv , self.conv_to)
+        self.last_conv = conv
 
 class BitcoinMessage(Message):
+
+    def setup(self):
+        self.last_btc = 0
 
     def do_update(self):
         from forex_python.bitcoin import BtcConverter
         log.info("fetching currency update")
         bitcoin = BtcConverter() 
-        self.text = "1 Bitcoin = %.2f EUR" % bitcoin.get_latest_price('EUR')
+        btc = bitcoin.get_latest_price('EUR')
+
+        self.text = "1 Bitcoin = %s%.2f EUR" % (self.get_color_compare(btc, self.last_btc), btc)
+        self.last_btc = btc
 
 
 if __name__ == "__main__":
@@ -117,8 +139,9 @@ if __name__ == "__main__":
     tm = TimeMessage('B')
     cm = CurrencyMessage('C', 'GBP')
     bc = BitcoinMessage('D')
+    am = AmazingMessage('E')
 
-    messages = [ sm, tm, cm, bc ]
+    messages = [ sm, tm, cm, bc, am ]
 
     # initial message
     for m in messages:
