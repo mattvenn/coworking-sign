@@ -2,7 +2,7 @@ import time
 import alphasign
 import subprocess
 import logging
-from messages import StaticMessage, TimeMessage, BitcoinMessage, CurrencyMessage, AmazingMessage, KickstarterMessage, is_pi, TwitterMessage
+from messages import StaticMessage, TimeMessage, BitcoinMessage, CurrencyMessage, AmazingMessage, KickstarterMessage, is_pi, TwitterMessage, RSSMessage
 
 # get logging started
 log_format = logging.Formatter('%(asctime)s - %(name)-12s - %(levelname)-8s - %(message)s')
