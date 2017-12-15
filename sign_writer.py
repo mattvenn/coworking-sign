@@ -42,7 +42,8 @@ if __name__ == "__main__":
         TwitterMessage('G', 'dygmalab'),
         TwitterMessage('H', 'fumblau'),
         TwitterMessage('I', 'simracingcoach'),
-        KickstarterMessage('F', 'Reflex', 'https://www.kickstarter.com/projects/reflexcamera/reflex-bringing-back-the-analogue-slr-camera'),
+        RSSMessage('J', 'http://thisdayintechhistory.com/feed/')
+        #KickstarterMessage('F', 'Reflex', 'https://www.kickstarter.com/projects/reflexcamera/reflex-bringing-back-the-analogue-slr-camera'),
         ]
 
     # initial message
