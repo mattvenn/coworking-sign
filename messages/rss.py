@@ -21,6 +21,7 @@ class RSSMessage(Message):
         soup = BeautifulSoup(item['summary'], 'lxml')
         text = soup.get_text()
         self.text = text.split('.')[0]
+        self.text = self.text.encode('utf-8')
 
     # override get_text so we can force scroll with high speed
     def get_text(self):
