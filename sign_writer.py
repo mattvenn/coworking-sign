@@ -39,19 +39,22 @@ if __name__ == "__main__":
         CurrencyMessage('C', 'GBP'),
         BitcoinMessage('D'),
         AmazingMessage('E'),
+        RSSMessage('F', 'http://thisdayintechhistory.com/feed/'),
         TwitterMessage('G', 'dygmalab'),
         TwitterMessage('H', 'fumblau'),
         TwitterMessage('I', 'simracingcoach'),
-        RSSMessage('J', 'http://thisdayintechhistory.com/feed/')
         #KickstarterMessage('F', 'Reflex', 'https://www.kickstarter.com/projects/reflexcamera/reflex-bringing-back-the-analogue-slr-camera'),
         ]
 
     # initial message
-    for m in messages:
-        logging.info(m.get_plain_text())
-        if is_pi():
-            sign.write(m.get_text())
-
+    try:
+        for m in messages:
+            logging.info(m.get_plain_text())
+            if is_pi():
+                sign.write(m.get_text())
+    except Exception as e:
+        logging.error(e)
+        exit(1) 
 
     # poll and update
     try:
