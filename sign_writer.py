@@ -43,7 +43,7 @@ if __name__ == "__main__":
         TwitterMessage('G', 'dygmalab'),
         TwitterMessage('H', 'fumblau'),
         TwitterMessage('I', 'simracingcoach'),
-        #KickstarterMessage('F', 'Reflex', 'https://www.kickstarter.com/projects/reflexcamera/reflex-bringing-back-the-analogue-slr-camera'),
+        KickstarterMessage('J', 'Dygma', 'https://www.kickstarter.com/projects/deilor/dygma-raise-the-worlds-most-advanced-gaming-keyboa'),
         ]
 
     # initial message
@@ -59,8 +59,8 @@ if __name__ == "__main__":
     # poll and update
     try:
         while True:
-            time.sleep(1)
-            logging.info("sleeping")
+            time.sleep(5)
+            logging.debug("sleeping")
             for m in messages:
                 if m.update():
                     logging.info(m.get_plain_text())
