@@ -12,7 +12,7 @@ class KickstarterMessage(TwoLineMessage):
         self.name = name
         self.top = "name      day bkrs $total  % " # top line is actually only 29 chars - off by one bug in the sign's firmware?
         super(KickstarterMessage, self).__init__(label)
-        self.update_period = 60 * 60 # 60 minutes in seconds
+        self.update_period = 10 * 60 # 10 minutes in seconds
 
     def do_update(self):
         if self.fake:
