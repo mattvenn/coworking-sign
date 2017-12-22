@@ -1,8 +1,7 @@
 from messages import TwoLineMessage, is_pi
 import alphasign
 import logging
-
-from bs4 import BeautifulSoup, SoupStrainer
+import re
 import requests
 
 class KickstarterMessage(TwoLineMessage):
@@ -27,20 +26,21 @@ class KickstarterMessage(TwoLineMessage):
             self.text = "failed to fetch stats for %s" % self.name
             return
 
-        # parse
-        logging.info("parsing - takes a long time on the Pi!")
-        strainer = SoupStrainer('div', attrs={'class': "NS_campaigns__stats"})
-        soup = BeautifulSoup(result.content, 'lxml', parse_only=strainer)
-        pledged = soup.find("div", {"id": "pledged"})
-        backers = soup.find("div", {"id": "backers_count"})
-        duration = soup.find("span", {"id": "project_duration_data"})
+        m = re.search('data-pledged="([0-9.]+)"', result.content)
+        pledged = float(m.group(1))
+        
+        m = re.search('data-backers-count="([0-9.]+)"', result.content)
+        backers = int(m.group(1))
+
+        m = re.search('data-hours-remaining="([0-9.]+)"', result.content)
+        duration = int(m.group(1))
+
+        m = re.search('data-percent-raised="([0-9.]+)"', result.content)
+        percent_raised = float(m.group(1))
 
         # assemble text
                     ##############################  30 chars wide
-        self.bot = "%-9s %-3d %-4d %-7d %-3d" % (self.name[0:9], int(duration.attrs['data-hours-remaining'])/24,
-            int(backers.attrs['data-backers-count']),
-            float(pledged.attrs['data-pledged']),
-            float(pledged.attrs['data-percent-raised'])*100)
+        self.bot = "%-9s %-3d %-4d %-7d %-3d" % (self.name[0:9], duration/24, backers, pledged, percent_raised*100)
     
 
 if __name__ == "__main__":
@@ -49,7 +49,8 @@ if __name__ == "__main__":
    
     project_name = 'IOToilets'
     project_url = 'http://iotoilets.com'
-    ks = KickstarterMessage('A', project_name, project_url, fake=True) # fake to avoid the overhead of actually parsing
+    project_url = 'https://www.kickstarter.com/projects/deilor/dygma-raise-the-worlds-most-advanced-gaming-keyboa'
+    ks = KickstarterMessage('A', project_name, project_url, fake=False) # fake to avoid the overhead of actually parsing
     logging.info(ks.get_plain_text())
 
     if is_pi():
