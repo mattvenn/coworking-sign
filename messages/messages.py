@@ -111,10 +111,13 @@ class CurrencyMessage(Message):
         from forex_python.converter import CurrencyRates
         cr = CurrencyRates()
         log.info("fetching currency update %s to %s" % (self.conv_from, self.conv_to))
-        conv = cr.get_rate(self.conv_from, self.conv_to)
+        try:
+            conv = cr.get_rate(self.conv_from, self.conv_to)
+            self.text = "1 %s = %s%.2f %s" % (self.conv_from, self.get_color_compare(conv, self.last_conv), conv , self.conv_to)
+            self.last_conv = conv
+        except requests.exceptions.RequestException as e:
+            logging.warning("couldn't get update: %s" % e)
 
-        self.text = "1 %s = %s%.2f %s" % (self.conv_from, self.get_color_compare(conv, self.last_conv), conv , self.conv_to)
-        self.last_conv = conv
 
 class BitcoinMessage(Message):
 
@@ -125,10 +128,13 @@ class BitcoinMessage(Message):
         from forex_python.bitcoin import BtcConverter
         log.info("fetching currency update")
         bitcoin = BtcConverter() 
-        btc = bitcoin.get_latest_price('EUR')
+        try:
+            btc = bitcoin.get_latest_price('EUR')
 
-        self.text = "1 Bitcoin = %s%.2f EUR" % (self.get_color_compare(btc, self.last_btc), btc)
-        self.last_btc = btc
+            self.text = "1 Bitcoin = %s%.2f EUR" % (self.get_color_compare(btc, self.last_btc), btc)
+            self.last_btc = btc
+        except requests.exceptions.RequestException as e:
+            logging.warning("couldn't get update: %s" % e)
 
 
 if __name__ == "__main__":

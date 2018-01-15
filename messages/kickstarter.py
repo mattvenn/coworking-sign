@@ -21,7 +21,12 @@ class KickstarterMessage(TwoLineMessage):
 
         # fetch page
         logging.info("fetching kickstarter information for %s" % self.name)
-        result = requests.get(self.url)
+        try:
+            result = requests.get(self.url)
+        except requests.exceptions.RequestException as e:
+            logging.warning("couldn't get update: %s" % e)
+            return
+
         if result.status_code != 200:
             self.text = "failed to fetch stats for %s" % self.name
             return
