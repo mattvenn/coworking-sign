@@ -38,13 +38,17 @@ class TwitterMessage(TwoLineMessage):
         self.stats['favs'] = 0
         self.stats['retweets'] = 0
         if self.fake == False:
-            for status in tweepy.Cursor(self.api.user_timeline, id=self.name).items():
-                self.stats['favs'] += status.favorite_count
-                self.stats['retweets'] += status.retweet_count
+            try:
+                for status in tweepy.Cursor(self.api.user_timeline, id=self.name).items():
+                    self.stats['favs'] += status.favorite_count
+                    self.stats['retweets'] += status.retweet_count
 
-        user = self.api.get_user(self.name)
-        self.stats['statuses'] = user.statuses_count
-        self.stats['followers'] = user.followers_count
+		user = self.api.get_user(self.name)
+		self.stats['statuses'] = user.statuses_count
+		self.stats['followers'] = user.followers_count
+
+            except tweepy.error.TweepError as e:
+                logging.warning("tweepy error! %s" % e)
 
         self.bot = "%-9s %s%-4d %s%-4d %s%-4d %s%-4d" % (self.name[0:9],
             self.get_color_compare(self.stats['statuses'], self.last_stats['statuses']), self.stats['statuses'],

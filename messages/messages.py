@@ -1,6 +1,7 @@
 import time
 import logging
 from abc import ABCMeta, abstractmethod
+import requests
 
 log = logging.getLogger(__name__)
 
