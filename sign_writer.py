@@ -43,18 +43,14 @@ if __name__ == "__main__":
         TwitterMessage('G', 'dygmalab'),
         TwitterMessage('H', 'fumblau'),
         TwitterMessage('I', 'simracingcoach'),
-        KickstarterMessage('J', 'Dygma', 'https://www.kickstarter.com/projects/deilor/dygma-raise-the-worlds-most-advanced-gaming-keyboa'),
+#        KickstarterMessage('J', 'Dygma', 'https://www.kickstarter.com/projects/deilor/dygma-raise-the-worlds-most-advanced-gaming-keyboa'),
         ]
 
     # initial message
-    try:
-        for m in messages:
-            logging.info(m.get_plain_text())
-            if is_pi():
-                sign.write(m.get_text())
-    except Exception as e:
-        logging.error(e)
-        exit(1) 
+    for m in messages:
+        logging.info(m.get_plain_text())
+        if is_pi():
+            sign.write(m.get_text())
 
     # poll and update
     try:
@@ -66,8 +62,9 @@ if __name__ == "__main__":
                     logging.info(m.get_plain_text())
                     if is_pi():
                         sign.write(m.get_text())
-    except KeyboardInterrupt:
-        logging.info("shut down")
+
+    except KeyboardInterrupt as e:
+        logging.info("shutdown")
         for m in messages:
             m.finish()
         

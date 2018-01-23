@@ -27,7 +27,11 @@ class Message(object):
     def update(self):
         if self.update_period and (time.time() > self.last_updated + self.update_period):
             self.last_updated = time.time()
-            self.do_update()
+            try:
+                self.do_update()
+            except Exception as error:
+                self.set_error_text(error)
+                logging.error(error)
             return True
         return False
     
@@ -39,6 +43,12 @@ class Message(object):
     # hook for any setup required before update is called
     def setup(self):
         pass
+
+    def set_error_text(self, error):
+        self.text = self.format_error(error)
+    
+    def format_error(self, error):
+        return "%s failed: %s" % (type(self).__name__, error)
 
     # return text for the sign
     def get_text(self):
@@ -62,6 +72,10 @@ class Message(object):
         return color
 
 class TwoLineMessage(Message):
+
+    def set_error_text(self, error):
+        self.top = self.format_error(error)
+        self.bot = ""
 
     def get_plain_text(self):
         log.info("[" + self.top + "]")
