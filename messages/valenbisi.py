@@ -1,4 +1,4 @@
-from messages import is_pi, TwoLineMessage
+from messages import is_pi, Message
 if is_pi():
     import alphasign
 
@@ -9,7 +9,7 @@ from xml.etree import ElementTree
 
 log = logging.getLogger(__name__)
 
-class ValenbisiMessage(TwoLineMessage):
+class ValenbisiMessage(Message):
 
     def __init__(self, label, url):
         self.url = url
@@ -17,15 +17,13 @@ class ValenbisiMessage(TwoLineMessage):
         self.update_period = 10 * 60 # 10 minutes in seconds
 
     def do_update(self):
-
         response = requests.get(self.url)
         tree = ElementTree.fromstring(response.content)
         available = tree.find('available').text
         total = tree.find('total').text
         updated = int(tree.find('updated').text)
-        self.bot = "%s of %s bikes ready" % (available, total)
         updated_time = datetime.fromtimestamp(updated).strftime("%H:%M:%S")
-        self.top = "Valenbisi last updated: %s" % updated_time
+        self.text = "Valenbisi %s of %s bikes ready at %s" % (available, total, updated_time)
 
 if __name__ == "__main__":
 
