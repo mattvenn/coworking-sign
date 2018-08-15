@@ -28,7 +28,7 @@ class TwitterMessage(TwoLineMessage):
         self.update_period = 60 * 60 # 60 minutes in seconds - as the update takes so long
 
     def do_update(self):
-        log.info("fetching history... this will take some time")
+        log.info("fetching history for %s... this will take some time" % self.name)
 
         # bit silly having to fetch entire history, but there seems no way to easily cache it
         # and only get updates. The streaming api seems to only accept new tweets from the user
