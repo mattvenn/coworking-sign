@@ -17,13 +17,17 @@ class ValenbisiMessage(Message):
         self.update_period = 10 * 60 # 10 minutes in seconds
 
     def do_update(self):
-        response = requests.get(self.url)
+        # multiple requests give different results for updated
+        response = requests.get(self.url, headers={'Cache-Control': 'no-cache'})
         tree = ElementTree.fromstring(response.content)
         available = tree.find('available').text
         total = tree.find('total').text
         updated = int(tree.find('updated').text)
-        updated_time = datetime.fromtimestamp(updated).strftime("%H:%M:%S")
-        self.text = "Valenbisi %s of %s bikes ready at %s" % (available, total, updated_time)
+        updated_time = datetime.fromtimestamp(updated)
+        delta = datetime.now() - updated_time
+        logging.info(updated)
+        logging.info(delta.seconds)
+        self.text = "Valenbisi: %s de %s bikes listas hace %d minutos" % (available, total, delta.seconds / 60)
 
 if __name__ == "__main__":
 
