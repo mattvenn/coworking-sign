@@ -99,7 +99,7 @@ class StaticMessage(Message):
 class AmazingMessage(Message):
 
     def setup(self):
-        self.people = [ 'Guillem Cabo Engineering', 'Fumblau','SimracingCoach', 'Sirius Prototypes', 'Matt Venn Engineering', 'YOU', 'Seku' ]
+        self.people = [ 'Fumblau','SimracingCoach', 'Sirius Prototypes', 'Matt Venn Engineering', 'YOU' ]
         self.index = 0
 
     def do_update(self):
