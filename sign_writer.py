@@ -2,7 +2,7 @@ import time
 import alphasign
 import subprocess
 import logging
-from messages import StaticMessage, TimeMessage, BitcoinMessage, CurrencyMessage, AmazingMessage, KickstarterMessage, is_pi, TwitterMessage, RSSMessage
+from messages import StaticMessage, TimeMessage, BitcoinMessage, CurrencyMessage, AmazingMessage, KickstarterMessage, is_pi, TwitterMessage, RSSMessage, ValenbisiMessage
 
 # get logging started
 log_format = logging.Formatter('%(asctime)s - %(name)-12s - %(levelname)-8s - %(message)s')
@@ -43,6 +43,7 @@ if __name__ == "__main__":
         TwitterMessage('G', 'dygmalab'),
         TwitterMessage('H', 'fumblau'),
         TwitterMessage('I', 'simracingcoach'),
+        ValenbisiMessage('J', 'http://www.valenbisi.es/service/stationdetails/valence/75')
 #        KickstarterMessage('J', 'Dygma', 'https://www.kickstarter.com/projects/deilor/dygma-raise-the-worlds-most-advanced-gaming-keyboa'),
         ]
 
