@@ -27,10 +27,6 @@ class ValenbisiMessage(TwoLineMessage):
         updated_time = datetime.fromtimestamp(updated).strftime("%H:%M:%S")
         self.top = "Valenbisi last updated: %s" % updated_time
 
-    # override get_text so we can force scroll with high speed
-    def get_text(self):
-        return alphasign.Text(alphasign.speeds.SPEED_5 + self.text, mode=alphasign.modes.SCROLL, label=self.label)
-
 if __name__ == "__main__":
 
     logging.basicConfig(level=logging.INFO)
