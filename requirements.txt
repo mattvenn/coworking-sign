@@ -1,4 +1,4 @@
-alphasign
+git+https://github.com/mattvenn/alphasign
 forex-python # for bitcoin
 tweepy # for twitter
 requests # kickstarter

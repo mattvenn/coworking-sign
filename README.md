@@ -13,7 +13,9 @@ communicating with the Aspect 64 LED sign.
 
 add this to crontab:
 
-	@reboot cd coworking-sign; python sign_writer.py > log 2>&1
+	@reboot sleep 60; cd coworking-sign; python sign_writer.py > log 2>&1
+
+sleep is to allow network to get started
 
 ## Dependencies
 
@@ -21,11 +23,11 @@ Install python-lxml with apt to avoid very long compiliation times:
 
 	sudo apt-get install python-lxml
 
-Install alphasign from my repo https://github.com/mattvenn/alphasign
-
-Install other dependencies in requirements.txt
+Install python dependencies in requirements.txt
 
 	sudo pip install -r requirements.txt
+
+Which will install my alphasign fork from github as pull request to fix sign setup isn't merged.
 
 ## Watchdog
 
