@@ -29,6 +29,10 @@ Install python dependencies in requirements.txt
 
 Which will install my alphasign fork from github as pull request to fix sign setup isn't merged.
 
+Twitter display requires secrets, copy the template and then edit it: 
+
+    cp messages/not_twitter_secrets.py messages/twitter_secrets.py
+
 ## Watchdog
 
 	sudo apt-get install watchdog
