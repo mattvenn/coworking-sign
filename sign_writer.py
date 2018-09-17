@@ -31,6 +31,9 @@ if __name__ == "__main__":
         sign = alphasign.interfaces.local.Serial(device='/dev/ttyUSB0', baudrate=38400)
         sign.connect()
         sign.clear_memory()
+        logging.info("connected to sign via serial")
+    else:
+        logging.warning("not on a pi, so not using sign")
 
 
     messages = [
@@ -40,19 +43,21 @@ if __name__ == "__main__":
         BitcoinMessage('D'),
         AmazingMessage('E'),
         RSSMessage('F', 'http://thisdayintechhistory.com/feed/'),
-        TwitterMessage('G', 'dygmalab'),
-        TwitterMessage('H', 'fumblau'),
-        TwitterMessage('I', 'simracingcoach'),
+#        TwitterMessage('G', 'dygmalab'),
+#        TwitterMessage('H', 'fumblau'),
+#        TwitterMessage('I', 'simracingcoach'),
         ValenbisiMessage('J', 'http://www.valenbisi.es/service/stationdetails/valence/75')
 #        KickstarterMessage('J', 'Dygma', 'https://www.kickstarter.com/projects/deilor/dygma-raise-the-worlds-most-advanced-gaming-keyboa'),
         ]
 
+    logging.info("done setup - writing")
     # initial message
     for m in messages:
         logging.info(m.get_plain_text())
         if is_pi():
             sign.write(m.get_text())
 
+    logging.info("main loop")
     # poll and update
     try:
         while True:

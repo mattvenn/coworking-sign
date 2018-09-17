@@ -9,7 +9,7 @@ def is_pi():
     import socket
     hostname = socket.gethostname()
     #logging.info(hostname) # if this line is commented, log level is forced to warning?!
-    if hostname == "raspberrypi":
+    if hostname == "coworking-sign":
         return True
     return False
 
