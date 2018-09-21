@@ -4,7 +4,9 @@ if is_pi():
 
 import feedparser
 from bs4 import BeautifulSoup
+import re
 import logging
+import datetime
 
 log = logging.getLogger(__name__)
 
@@ -27,11 +29,26 @@ class RSSMessage(Message):
     def get_text(self):
         return alphasign.Text(alphasign.speeds.SPEED_5 + self.text, mode=alphasign.modes.SCROLL, label=self.label)
 
+class TechHistoryMessage(RSSMessage):
+
+    # override to make date easier to understand
+    def do_update(self):
+        super(TechHistoryMessage, self).do_update()
+        logging.info(self.text)
+        m = re.search("(\w+) (\d+), (\d{4}) (.*)", self.text)
+        if m is not None:
+            this_year = int(datetime.datetime.today().strftime("%Y"))
+            year = int(m.group(3))
+            text = m.group(4)
+            self.text = "%d years ago today - %s" % (this_year - year, text)
+
+
+
 if __name__ == "__main__":
 
     logging.basicConfig(level=logging.INFO)
 
-    m = RSSMessage('A', 'http://thisdayintechhistory.com/feed/')
+    m = TechHistoryMessage('A', 'http://thisdayintechhistory.com/feed/')
         
     logging.info(m.get_plain_text())
 
