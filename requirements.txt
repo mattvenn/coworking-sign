@@ -1,5 +1,5 @@
 git+https://github.com/mattvenn/alphasign
-forex-python # for bitcoin
+forex-python==1.5 # for bitcoin and other rates
 tweepy # for twitter
 requests # kickstarter
 bs4 # beautiful soup for kickstarter and rss

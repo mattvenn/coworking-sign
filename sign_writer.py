@@ -23,35 +23,35 @@ fh.setLevel(logging.INFO)
 fh.setFormatter(log_format)
 log.addHandler(fh)
 
+def connect_sign():
+    sign = alphasign.interfaces.local.Serial(device='/dev/ttyUSB0', baudrate=38400)
+    sign.connect()
+    logging.info("connected to sign via serial")
+    return sign
+
 if __name__ == "__main__":
 
     logging.info("starting sign writer")
 
-    if is_pi():
-        sign = alphasign.interfaces.local.Serial(device='/dev/ttyUSB0', baudrate=38400)
-        sign.connect()
-        sign.clear_memory()
-        logging.info("connected to sign via serial")
-    else:
-        logging.warning("not on a pi, so not using sign")
-
-
     messages = [
-        StaticMessage('A', "http://bit.ly/cowork-sign"),
+#        StaticMessage('A', "http://bit.ly/cowork-sign"),
         TimeMessage('B'),
         CurrencyMessage('C', 'GBP'),
         BitcoinMessage('D'),
         AmazingMessage('E'),
         TechHistoryMessage('F', 'http://thisdayintechhistory.com/feed/'),
-        TwitterMessage('G', 'dygmalab'),
-        TwitterMessage('H', 'fumblau'),
-        TwitterMessage('I', 'simracingcoach'),
+#        TwitterMessage('G', 'dygmalab'),
+#        TwitterMessage('H', 'fumblau'),
+#        TwitterMessage('I', 'simracingcoach'),
         ValenbisiMessage('J', 'http://www.valenbisi.es/service/stationdetails/valence/75')
 #        KickstarterMessage('J', 'Dygma', 'https://www.kickstarter.com/projects/deilor/dygma-raise-the-worlds-most-advanced-gaming-keyboa'),
         ]
 
     logging.info("done setup - writing")
     # initial message
+    sign = connect_sign()
+    sign.clear_memory()
+
     for m in messages:
         logging.info(m.get_plain_text())
         if is_pi():
@@ -67,6 +67,7 @@ if __name__ == "__main__":
                 if m.update():
                     logging.info(m.get_plain_text())
                     if is_pi():
+                        sign = connect_sign()
                         sign.write(m.get_text())
 
     except KeyboardInterrupt as e:
