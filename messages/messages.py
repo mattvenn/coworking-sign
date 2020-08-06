@@ -18,6 +18,7 @@ import alphasign
 class Message(object):
     def __init__(self, label):
         self.last_updated = 0
+        self.text = ""
         self.label = label
         self.update_period = 5 * 60 # 5 minutes in seconds
         self.setup()
